@@ -5,17 +5,17 @@ source ~/.zplug/init.zsh
 autoload -U compinit
 compinit
 setopt auto_cd
-setopt auto_pushd 
+setopt auto_pushd
 setopt correct
 setopt list_packed
 autoload predict-on
-#predict-on 
+#predict-on
 zstyle ':completion:*' menu select
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt hist_ignore_dups     # ignore duplication command history list
-setopt share_history        # share command history data 
+setopt share_history        # share command history data
 
 # If not running interactively, do not do anything
 [[ $- != *i* ]] && return
@@ -47,6 +47,13 @@ eval $(thefuck --alias)
 # plugin settings
 zplug "agnoster/agnoster-zsh-theme", use:agnoster.zsh-theme, as:theme
 zplug "zsh-users/zsh-autosuggestions"
+
+# prompt settings
+function rprompt-gcloud-current-project {
+    echo "`cat ~/.config/gcloud/configurations/config_default | grep project | sed -E 's/^\project = (.*)$/\1/'`"
+}
+setopt prompt_subst
+RPROMPT='%F{cyan}[`rprompt-gcloud-current-project`]%f'
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then

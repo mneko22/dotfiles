@@ -1,6 +1,3 @@
-# Created by newuser for 5.1.1
-source ~/.zplug/init.zsh
-
 #Command completion
 autoload -U compinit
 compinit
@@ -42,26 +39,9 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-eval $(thefuck --alias)
-
-# plugin settings
-zplug "agnoster/agnoster-zsh-theme", use:agnoster.zsh-theme, as:theme
-zplug "zsh-users/zsh-autosuggestions"
-
 # prompt settings
 function rprompt-gcloud-current-project {
     echo "`cat ~/.config/gcloud/configurations/config_default | grep project | sed -E 's/^\project = (.*)$/\1/'`"
 }
 setopt prompt_subst
 RPROMPT='%F{cyan}[`rprompt-gcloud-current-project`]%f'
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-# Then, source plugins and add commands to $PATH
-zplug load --verbose

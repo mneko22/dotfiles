@@ -57,3 +57,9 @@ PATH=~/.local/bin:$PATH
 
 # prompt
 PROMPT="%F{green}%~ %F{yellow}%#%k%f "
+if [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
+	POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+	source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+	source ~/.zsh/p10k.zsh
+fi
+

@@ -23,17 +23,8 @@ if [ ! -d "${HOME}/.zsh" ]; then
     mkdir -p "${HOME}/.zsh"
 fi
 
-PS3="Do you use p10k theme?"
-select ans in yes no end
-do
-    if [ "${ans}" = "yes" ]; then
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.zsh/powerlevel10k"
-        ln -sf "${PWD}/p10k.zsh" "${HOME}/.zsh/p10k.zsh"
-        break
-    fi
-    if [ "${ans}" = "no" ] || [ "${ans}" = "end" ]; then
-        break
-    fi
-done
+if ! command -v starship >/dev/null 2>&1; then
+    curl -fsSL https://starship.rs/install.sh | sh -s -- -y
+fi
 
 echo "complete"

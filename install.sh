@@ -1,33 +1,39 @@
 #! /bin/bash
-DIR=${HOME}/.dotfiles_backup
-if [ ! -d ${DIR} ]; then
-   mkdir ${DIR}
+DIR="${HOME}/.dotfiles_backup"
+if [ ! -d "${DIR}" ]; then
+   mkdir -p -m 700 "${DIR}"
 fi
 
-if [ -f ${HOME}/.zshrc ]; then
-    mv ${HOME}/.zshrc ${DIR}
+if [ -f "${HOME}/.zshrc" ]; then
+    mv "${HOME}/.zshrc" "${DIR}"
 fi
-ln -s ${PWD}/zshrc ${HOME}/.zshrc
+ln -sf "${PWD}/zshrc" "${HOME}/.zshrc"
 
-if [ -f ${HOME}/.tmux.conf ]; then
-    mv ${HOME}/.tmux.conf ${DIR}
+if [ -f "${HOME}/.tmux.conf" ]; then
+    mv "${HOME}/.tmux.conf" "${DIR}"
 fi
-ln -s ${PWD}/tmux.conf ${HOME}/.tmux.conf
+ln -sf "${PWD}/tmux.conf" "${HOME}/.tmux.conf"
 
-if [ -f ${HOME}/.vimrc ]; then
-    mv ${HOME}/.vimrc ${DIR}
+if [ -f "${HOME}/.vimrc" ]; then
+    mv "${HOME}/.vimrc" "${DIR}"
 fi
-ln -s ${PWD}/vimrc ${HOME}/.vimrc
+ln -sf "${PWD}/vimrc" "${HOME}/.vimrc"
 
-if [ ! -f ${HOME}/.zsh ]; then
-    mkdir .zsh
+if [ ! -d "${HOME}/.zsh" ]; then
+    mkdir -p "${HOME}/.zsh"
 fi
 
 PS3="Do you use p10k theme?"
 select ans in yes no end
-if [ $ans = "yes" ]; then
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.zsh/powerlevel10k
-    ln -s ${PWD}/p10k.zsh ${HOME}/.zsh/p10k.zsh
-fi
+do
+    if [ "${ans}" = "yes" ]; then
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.zsh/powerlevel10k"
+        ln -sf "${PWD}/p10k.zsh" "${HOME}/.zsh/p10k.zsh"
+        break
+    fi
+    if [ "${ans}" = "no" ] || [ "${ans}" = "end" ]; then
+        break
+    fi
+done
 
 echo "complete"

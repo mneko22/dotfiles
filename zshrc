@@ -30,6 +30,30 @@ bindkey "\\en" history-beginning-search-forward-end
 # If not running interactively, do not do anything
 [[ $- != *i* ]] && return
 
+if command -v fzf >/dev/null 2>&1; then
+    export CTRL_R_OPTS='--height 40% --reverse'
+
+    if [ -f ~/.fzf.zsh ]; then
+        source ~/.fzf.zsh
+        bindkey '^R' fzf-history-widget
+    else
+        fzf-history-widget() {
+            local selected
+            selected=$(fc -rl 1 \
+                | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' \
+                | fzf ${=CTRL_R_OPTS})
+
+            if [[ -n "$selected" ]]; then
+                LBUFFER+="$selected"
+            fi
+
+            zle redisplay
+        }
+        zle -N fzf-history-widget
+        bindkey '^R' fzf-history-widget
+    fi
+fi
+
 # load enviroment settings
 if [ -f ~/.local_profile ]; then
     source ~/.local_profile

@@ -16,8 +16,13 @@ zstyle ':completion:*' menu select
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
-setopt hist_ignore_dups     # ignore duplication command history list
-setopt share_history        # share command history data
+setopt hist_ignore_all_dups # delete older duplicate entries when adding a command
+setopt hist_find_no_dups    # skip duplicate entries during history search
+setopt hist_reduce_blanks   # normalize history by trimming superfluous blanks
+setopt share_history        # immediately append and share command history across sessions
+# NOTE: `share_history` supersedes `inc_append_history`; enabling both is redundant.
+# In multi-terminal use, `share_history` may reorder what each shell shows.
+# Keep `share_history` for cross-session visibility; disable it if strict per-shell order is preferred.
 
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end

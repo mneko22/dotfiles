@@ -16,7 +16,6 @@ zstyle ':completion:*' menu select
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
-setopt hist_ignore_dups     # ignore duplication command history list
 setopt hist_ignore_all_dups # delete older duplicate entries when adding a command
 setopt hist_find_no_dups    # skip duplicate entries during history search
 setopt hist_reduce_blanks   # normalize history by trimming superfluous blanks

@@ -1,18 +1,28 @@
+# If not running interactively, do not do anything
+[[ $- != *i* ]] && return
+
 # Key bind
 bindkey -e
 zstyle ':completion:*:default' menu select=1
 
-#Command completion
+# Command completion
 autoload -U compinit
-compinit
+# Refresh completion cache at most once per day for faster startup
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
+fi
 setopt auto_cd
 setopt auto_pushd
-setopt correct
+unsetopt correct # disable typo-correction prompts to keep command execution snappy
 setopt list_packed
 autoload predict-on
 autoload -Uz select-word-style
 #predict-on
 zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}%d%f'
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
@@ -32,8 +42,17 @@ bindkey "^n" history-beginning-search-forward-end
 bindkey "\\ep" history-beginning-search-backward-end
 bindkey "\\en" history-beginning-search-forward-end
 
-# If not running interactively, do not do anything
-[[ $- != *i* ]] && return
+# Fuzzy history search (Ctrl-r) when fzf is available
+if command -v fzf >/dev/null 2>&1; then
+    fzf-history-widget() {
+        local selected
+        selected=$(fc -rl 1 | awk '!seen[$0]++' | fzf --height=40% --layout=reverse --prompt='history> ' --query="$LBUFFER") || return
+        LBUFFER=$(printf '%s' "$selected" | sed -E 's/^[[:space:]]*[0-9]+[[:space:]]+//')
+        zle redisplay
+    }
+    zle -N fzf-history-widget
+    bindkey '^R' fzf-history-widget
+fi
 
 # load enviroment settings
 if [ -f ~/.local_profile ]; then
@@ -56,6 +75,11 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
+# Safer defaults for destructive file operations
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
 
 # Additional PATH
 PATH=~/.local/bin:$PATH

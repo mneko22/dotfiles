@@ -23,6 +23,15 @@ if [ ! -d "${HOME}/.zsh" ]; then
     mkdir -p "${HOME}/.zsh"
 fi
 
+if [ ! -d "${HOME}/.config" ]; then
+    mkdir -p "${HOME}/.config"
+fi
+
+if [ -f "${HOME}/.config/starship.toml" ]; then
+    mv "${HOME}/.config/starship.toml" "${DIR}"
+fi
+ln -sf "${PWD}/starship.toml" "${HOME}/.config/starship.toml"
+
 if ! command -v starship >/dev/null 2>&1; then
     curl -fsSL https://starship.rs/install.sh | sh -s -- -y
 fi
